@@ -1309,6 +1309,22 @@ class assignment_base {
         }
 
         if ($sort = $table->get_sql_sort()) {
+            $sorttemp = explode(', ', $sort);
+            $newsort= array();
+            foreach ($sorttemp as $sortfield) {
+                $line=explode(' ', $sortfield);
+                if ($line[0]=='grade') {
+                    $line[0] = 'COALESCE(grade, 0)';
+                    $newsort[]=implode(' ', $line);
+                } else if ($line[0]=='submissioncomment') {
+                    $line[0] = 'COALESCE(submissioncomment, \'\')';
+                    $newsort[]=implode(' ', $line);;
+                } else {
+                    $newsort[]=$sortfield;
+                }
+            }
+            $sort = implode(', ', $newsort);
+
             $sort = ' ORDER BY '.$sort;
         }
 
